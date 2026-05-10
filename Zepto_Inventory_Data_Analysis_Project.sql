@@ -89,10 +89,23 @@ order by avg_discount desc
 limit 5;
 
 -- Q6. Find the price per gram for products above 100gms and sort by best values --
+select distinct name, weightgms, discountsellingprice,
+round(discountsellingprice/weightgms,2) as price_per_gms
+from zepto
+where weightgms>=100
+order by price_per_gms;
 
-
--- Q7. Group the products into categories like low. medium and Bulk. --
-
+-- Q7. Group the products into categories like low, medium and Bulk. --
+select distinct name, weightgms,
+case when weightgms<1000 then 'low'
+when weightgms<5000 then 'medium'
+else 'bulk'
+end as weight_category
+from zepto;
 
 -- Q8. What is the total inventory weight per category. --
-
+select category,
+sum(weightgms * availablequantity) as total_weight
+from zepto
+group by category
+order by total_weight;
